@@ -225,7 +225,7 @@ public abstract class TableToTableMatcher extends TnTTask {
 		DisjointHeaderMatchingRule rule = new DisjointHeaderMatchingRule(disjointHeaders, 0.0);
 		rule.setVerbose(verbose);
 
-		cors = cors.transform(rule);
+		cors = cors.map(rule);
 		
 		return cors;
 	}

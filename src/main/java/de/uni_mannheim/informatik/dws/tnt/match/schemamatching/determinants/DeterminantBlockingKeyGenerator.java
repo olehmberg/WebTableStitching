@@ -39,7 +39,7 @@ public class DeterminantBlockingKeyGenerator extends BlockingKeyGenerator<Matcha
 		// correspondences are joined via dataset id by standard blocker, so we get only correspondences for the same table as 'record' in 'correspondences'
 		
 		// group the correspondences by table combination, so we can check if the determinant is completely mapped for each table individually
-		Processable<Group<String, Correspondence<MatchableTableColumn, Matchable>>> groups = correspondences.groupRecords((Correspondence<MatchableTableColumn, Matchable> cor,
+		Processable<Group<String, Correspondence<MatchableTableColumn, Matchable>>> groups = correspondences.group((Correspondence<MatchableTableColumn, Matchable> cor,
 				DataIterator<Pair<String, Correspondence<MatchableTableColumn, Matchable>>> col) -> {
 					if(cor.getFirstRecord().getTableId()!=cor.getSecondRecord().getTableId()) {
 						
@@ -55,7 +55,7 @@ public class DeterminantBlockingKeyGenerator extends BlockingKeyGenerator<Matcha
 		});
 		
 		// now iterate over the groups
-		groups.iterateDataset(new DataIterator<Group<String,Correspondence<MatchableTableColumn, Matchable>>>() {
+		groups.foreach(new DataIterator<Group<String,Correspondence<MatchableTableColumn, Matchable>>>() {
 			
 			private static final long serialVersionUID = 1L;
 

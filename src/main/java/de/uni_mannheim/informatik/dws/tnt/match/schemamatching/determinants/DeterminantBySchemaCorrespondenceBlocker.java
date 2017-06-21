@@ -85,7 +85,7 @@ public class DeterminantBySchemaCorrespondenceBlocker {
 				
 			}
 		}; 
-		Processable<Group<Pair<Integer, Integer>, Correspondence<MatchableTableColumn, Matchable>>> groupedCorrespondences = schemaCorrespondences.groupRecords(groupCorrespondences);
+		Processable<Group<Pair<Integer, Integer>, Correspondence<MatchableTableColumn, Matchable>>> groupedCorrespondences = schemaCorrespondences.group(groupCorrespondences);
 		
 		// then, join the keys with the schema correspondences via table id
 		// result: key, schema correspondences
@@ -228,7 +228,7 @@ public class DeterminantBySchemaCorrespondenceBlocker {
 					
 					if(leftMatch && rightMatch) {
 						
-						causes = causes.filter(
+						causes = causes.where(
 								(c) -> 
 									(rightCorrespondingColumns.contains(c.getFirstRecord()) || leftCorrespondingColumns.contains(c.getFirstRecord()))
 									&&
@@ -247,7 +247,7 @@ public class DeterminantBySchemaCorrespondenceBlocker {
 				}
 			}
 		};
-		Processable<Group<Pair<Integer, Integer>, Correspondence<MatchableTableDeterminant, MatchableTableColumn>>> grouped = join2.groupRecords(groupByTablePair);
+		Processable<Group<Pair<Integer, Integer>, Correspondence<MatchableTableDeterminant, MatchableTableColumn>>> grouped = join2.group(groupByTablePair);
 		
 		RecordMapper<Group<Pair<Integer, Integer>, Correspondence<MatchableTableDeterminant, MatchableTableColumn>>, Correspondence<MatchableTableDeterminant, MatchableTableColumn>> resultTransformation = new RecordMapper<Group<Pair<Integer,Integer>,Correspondence<MatchableTableDeterminant,MatchableTableColumn>>, Correspondence<MatchableTableDeterminant,MatchableTableColumn>>() {
 
@@ -291,7 +291,7 @@ public class DeterminantBySchemaCorrespondenceBlocker {
 			}
 		};
 		
-		return grouped.transform(resultTransformation);
+		return grouped.map(resultTransformation);
 	}
 	
 }

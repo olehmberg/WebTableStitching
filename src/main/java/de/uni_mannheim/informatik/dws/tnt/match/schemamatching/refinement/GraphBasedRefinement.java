@@ -135,7 +135,7 @@ public class GraphBasedRefinement {
 				
 			}
 		};
-		Processable<Group<Integer, Correspondence<MatchableTableColumn, Matchable>>> groupedByCluster = corsWithClusters.groupRecords(groupByCluster);
+		Processable<Group<Integer, Correspondence<MatchableTableColumn, Matchable>>> groupedByCluster = corsWithClusters.group(groupByCluster);
 		
 		RecordMapper<Group<Integer, Correspondence<MatchableTableColumn, Matchable>>, Correspondence<MatchableTableColumn, Matchable>> resolveConflictsTransformation = new RecordMapper<Group<Integer,Correspondence<MatchableTableColumn,Matchable>>, Correspondence<MatchableTableColumn,Matchable>>() {
 			
@@ -274,7 +274,7 @@ public class GraphBasedRefinement {
 			}
 		};
 		
-		return groupedByCluster.transform(resolveConflictsTransformation);
+		return groupedByCluster.map(resolveConflictsTransformation);
 		
 	}
 	

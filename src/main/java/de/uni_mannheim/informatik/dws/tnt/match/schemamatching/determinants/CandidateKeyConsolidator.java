@@ -77,7 +77,7 @@ public class CandidateKeyConsolidator<T extends Matchable> {
 				
 			}
 		};
-		Processable<MatchableTableDeterminant> correspondenceKeys = correspondences.transform(correspondenceToKeys);
+		Processable<MatchableTableDeterminant> correspondenceKeys = correspondences.map(correspondenceToKeys);
 		
 		Processable<MatchableTableDeterminant> allKeys = data.append(correspondenceKeys);
 		
@@ -94,7 +94,7 @@ public class CandidateKeyConsolidator<T extends Matchable> {
 				resultCollector.next(new Pair<Integer, MatchableTableDeterminant>(record.getTableId(), record));
 			}
 		};
-		Processable<Group<Integer, MatchableTableDeterminant>> grouped = allKeys.groupRecords(dataToGroupingKey);
+		Processable<Group<Integer, MatchableTableDeterminant>> grouped = allKeys.group(dataToGroupingKey);
 		
 		RecordMapper<Group<Integer, MatchableTableDeterminant>, MatchableTableDeterminant> consolidation = new RecordMapper<Group<Integer,MatchableTableDeterminant>, MatchableTableDeterminant>() {
 			
@@ -142,7 +142,7 @@ public class CandidateKeyConsolidator<T extends Matchable> {
 			}
 		};
 		
-		Processable<MatchableTableDeterminant> consolidated = grouped.transform(consolidation);
+		Processable<MatchableTableDeterminant> consolidated = grouped.map(consolidation);
 		
 		return consolidated;
 	}

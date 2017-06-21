@@ -21,7 +21,7 @@ import de.uni_mannheim.informatik.dws.tnt.match.data.MatchableTableColumn;
 import de.uni_mannheim.informatik.dws.tnt.match.data.MatchableTableColumnValueGenerator;
 import de.uni_mannheim.informatik.dws.tnt.match.data.MatchableTableRow;
 import de.uni_mannheim.informatik.dws.winter.matching.aggregators.VotingAggregator;
-import de.uni_mannheim.informatik.dws.winter.matching.algorithms.SymmetricInstanceBasedSchemaMatching;
+import de.uni_mannheim.informatik.dws.winter.matching.algorithms.SymmetricInstanceBasedSchemaMatchingAlgorithm;
 import de.uni_mannheim.informatik.dws.winter.matching.blockers.InstanceBasedSchemaBlocker;
 import de.uni_mannheim.informatik.dws.winter.matrices.SimilarityMatrix;
 import de.uni_mannheim.informatik.dws.winter.matrices.SparseSimilarityMatrixFactory;
@@ -47,7 +47,7 @@ public class ValueBasedSchemaMatcher {
 		InstanceBasedSchemaBlocker<MatchableTableRow, MatchableTableColumn> blocker = new InstanceBasedSchemaBlocker<>(new MatchableTableColumnValueGenerator());
 		VotingAggregator<MatchableTableColumn, MatchableValue> aggregator = new VotingAggregator<>(false, 0.0);
 		
-		SymmetricInstanceBasedSchemaMatching<MatchableTableRow, MatchableTableColumn> matcher = new SymmetricInstanceBasedSchemaMatching<MatchableTableRow, MatchableTableColumn>(records, blocker, aggregator);
+		SymmetricInstanceBasedSchemaMatchingAlgorithm<MatchableTableRow, MatchableTableColumn> matcher = new SymmetricInstanceBasedSchemaMatchingAlgorithm<MatchableTableRow, MatchableTableColumn>(records, blocker, aggregator);
 		
 		matcher.run();
 		
@@ -55,7 +55,7 @@ public class ValueBasedSchemaMatcher {
 		
 		// create a 1:1 mapping of the attributes
 		
-		Processable<Group<Pair<Integer, Integer>, Correspondence<MatchableTableColumn, MatchableValue>>> groupedByTables = schemaCorrespondences.groupRecords(new RecordKeyValueMapper<Pair<Integer, Integer>, Correspondence<MatchableTableColumn,MatchableValue>, Correspondence<MatchableTableColumn,MatchableValue>>() {
+		Processable<Group<Pair<Integer, Integer>, Correspondence<MatchableTableColumn, MatchableValue>>> groupedByTables = schemaCorrespondences.group(new RecordKeyValueMapper<Pair<Integer, Integer>, Correspondence<MatchableTableColumn,MatchableValue>, Correspondence<MatchableTableColumn,MatchableValue>>() {
 
 			private static final long serialVersionUID = 1L;
 
@@ -71,7 +71,7 @@ public class ValueBasedSchemaMatcher {
 			}
 		});
 		
-		Processable<Correspondence<MatchableTableColumn, Matchable>> top1Correspondences = groupedByTables.transform((r,c) -> {
+		Processable<Correspondence<MatchableTableColumn, Matchable>> top1Correspondences = groupedByTables.map((r,c) -> {
 		
 			SimilarityMatrix<MatchableTableColumn> m = SimilarityMatrix.fromCorrespondences(r.getRecords().get(), new SparseSimilarityMatrixFactory());
 			BestChoiceMatching b = new BestChoiceMatching();

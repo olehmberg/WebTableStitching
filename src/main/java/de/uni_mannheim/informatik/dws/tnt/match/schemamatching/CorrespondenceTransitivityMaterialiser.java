@@ -106,7 +106,7 @@ public class CorrespondenceTransitivityMaterialiser {
 				}
 			}
 		};
-		return joined.transform(transformation);
+		return joined.map(transformation);
 	}
 	
 }

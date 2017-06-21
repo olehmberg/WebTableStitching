@@ -142,7 +142,7 @@ public class UnionTables {
     	
     	Processable<Table> allTables = new ParallelProcessableCollection<>(tables);
     	
-    	allTables.iterateDataset(new DataIterator<Table>() {
+    	allTables.foreach(new DataIterator<Table>() {
 
 			private static final long serialVersionUID = 1L;
 

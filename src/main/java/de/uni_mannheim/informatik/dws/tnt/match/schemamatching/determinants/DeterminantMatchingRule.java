@@ -53,7 +53,7 @@ public class DeterminantMatchingRule extends FilteringMatchingRule<MatchableTabl
 					leftProp, 
 					rightProp, 
 					1.0, 
-					schemaCorrespondences.filter(
+					schemaCorrespondences.where(
 						(c)->
 						(leftProp.getColumns().contains(c.getFirstRecord()) || rightProp.getColumns().contains(c.getFirstRecord())) 
 						&& (rightProp.getColumns().contains(c.getSecondRecord()) || leftProp.getColumns().contains(c.getSecondRecord()))

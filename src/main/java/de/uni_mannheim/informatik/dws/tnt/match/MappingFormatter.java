@@ -314,7 +314,7 @@ public class MappingFormatter {
 		};
 		
 		
-		Processable<Group<String, Correspondence<MatchableTableRow, MatchableTableDeterminant>>> byTable = correspondences.groupRecords(groupByTableCombination);
+		Processable<Group<String, Correspondence<MatchableTableRow, MatchableTableDeterminant>>> byTable = correspondences.group(groupByTableCombination);
 		
 		for(Group<String, Correspondence<MatchableTableRow, MatchableTableDeterminant>> group : byTable.get()) {
 			
@@ -355,7 +355,7 @@ public class MappingFormatter {
 		};
 		
 		
-		Processable<Group<String, Correspondence<MatchableTableRow, MatchableTableColumn>>> byTable = correspondences.groupRecords(groupByTableCombination);
+		Processable<Group<String, Correspondence<MatchableTableRow, MatchableTableColumn>>> byTable = correspondences.group(groupByTableCombination);
 		
 		for(Group<String, Correspondence<MatchableTableRow, MatchableTableColumn>> group : byTable.get()) {
 			
@@ -434,7 +434,7 @@ public class MappingFormatter {
 		};
 		
 		// group by table
-		Processable<Group<Collection<Integer>, Correspondence<MatchableTableRow, MatchableTableDeterminant>>> grouped = correspondences.groupRecords(groupByTablesMapper);
+		Processable<Group<Collection<Integer>, Correspondence<MatchableTableRow, MatchableTableDeterminant>>> grouped = correspondences.group(groupByTablesMapper);
 		
 		RecordMapper<Group<Collection<Integer>, Correspondence<MatchableTableRow, MatchableTableDeterminant>>, Correspondence<MatchableTableRow, MatchableTableDeterminant>> removeUntrustedCorrespondences = new RecordMapper<Group<Collection<Integer>,Correspondence<MatchableTableRow,MatchableTableDeterminant>>, Correspondence<MatchableTableRow,MatchableTableDeterminant>>() {
 			
@@ -564,7 +564,7 @@ public class MappingFormatter {
 			}
 		};
 		
-		grouped.transform(removeUntrustedCorrespondences);
+		grouped.map(removeUntrustedCorrespondences);
 		
 	}
 

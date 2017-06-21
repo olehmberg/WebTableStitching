@@ -49,7 +49,7 @@ public class FunctionalDependencyDiscovery {
 		
 		Processable<Table> webTables = new ProcessableCollection<>(tables);
 
-		webTables.iterateDataset(new DataIterator<Table>() {
+		webTables.foreach(new DataIterator<Table>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override

@@ -113,7 +113,7 @@ public class KeyMappedCorrespondenceFilter {
 				resultCollector.next(new Pair<List<Integer>, Pair<Pair<MatchableTableDeterminant,Correspondence<MatchableTableColumn,Matchable>>,MatchableTableDeterminant>>(Q.toList(record.getFirst().getFirst().getTableId(), record.getSecond().getTableId()), record));
 			}
 		};
-		Processable<Group<List<Integer>, Pair<Pair<MatchableTableDeterminant, Correspondence<MatchableTableColumn, Matchable>>, MatchableTableDeterminant>>> grouped = secondJoin.groupRecords(groupByTableCombination);
+		Processable<Group<List<Integer>, Pair<Pair<MatchableTableDeterminant, Correspondence<MatchableTableColumn, Matchable>>, MatchableTableDeterminant>>> grouped = secondJoin.group(groupByTableCombination);
 		
 		// filter
 		
@@ -184,7 +184,7 @@ public class KeyMappedCorrespondenceFilter {
 				}
 			}
 		};
-		return grouped.transform(transformation);
+		return grouped.map(transformation);
 	}
 
 }
