@@ -90,6 +90,7 @@ public class CreateStitchedUnionTables extends Executable {
 		Collection<Table> reconstructed = stitchedUnion.create(web.getTables(), web.getRecords(), web.getSchema(), web.getCandidateKeys(), schemaCorrespondences);
 		
 		File outFile = new File(resultLocation);
+		outFile.mkdirs();
 		System.err.println("Writing Stitched Union Tables");
 		JsonTableWriter w = new JsonTableWriter();
 		for(Table t : reconstructed) {
