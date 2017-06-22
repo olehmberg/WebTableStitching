@@ -25,8 +25,8 @@ import de.uni_mannheim.informatik.dws.winter.matching.blockers.NoSchemaBlocker;
 import de.uni_mannheim.informatik.dws.winter.matching.blockers.StandardRecordBlocker;
 import de.uni_mannheim.informatik.dws.winter.model.Correspondence;
 import de.uni_mannheim.informatik.dws.winter.model.DataSet;
-import de.uni_mannheim.informatik.dws.winter.model.HashedDataSet;
 import de.uni_mannheim.informatik.dws.winter.model.Matchable;
+import de.uni_mannheim.informatik.dws.winter.model.ParallelHashedDataSet;
 import de.uni_mannheim.informatik.dws.winter.processing.Processable;
 import de.uni_mannheim.informatik.dws.winter.processing.ProcessableCollection;
 
@@ -126,7 +126,7 @@ public abstract class TableToTableMatcher extends TnTTask {
 		
 		MatchingEngine<MatchableTableRow, MatchableTableDeterminant> engine = new MatchingEngine<>();
 		
-		DataSet<MatchableTableRow, MatchableTableDeterminant> ds = new HashedDataSet<>(web.getRecords().get());
+		DataSet<MatchableTableRow, MatchableTableDeterminant> ds = new ParallelHashedDataSet<>(web.getRecords().get());
 		DeterminantRecordBlockingKeyGenerator bkg = new DeterminantRecordBlockingKeyGenerator();
 		DeterminantBasedDuplicateDetectionRule rule = new DeterminantBasedDuplicateDetectionRule(0.0);
 		

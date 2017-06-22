@@ -29,9 +29,10 @@ import de.uni_mannheim.informatik.dws.tnt.match.ContextColumns;
 import de.uni_mannheim.informatik.dws.tnt.match.SpecialColumns;
 import de.uni_mannheim.informatik.dws.tnt.match.TableSchemaStatistics;
 import de.uni_mannheim.informatik.dws.tnt.match.dependencies.FunctionalDependencyUtils;
+import de.uni_mannheim.informatik.dws.winter.model.DataSet;
 import de.uni_mannheim.informatik.dws.winter.model.FusibleDataSet;
-import de.uni_mannheim.informatik.dws.winter.model.FusibleHashedDataSet;
-import de.uni_mannheim.informatik.dws.winter.model.HashedDataSet;
+import de.uni_mannheim.informatik.dws.winter.model.FusibleParallelHashedDataSet;
+import de.uni_mannheim.informatik.dws.winter.model.ParallelHashedDataSet;
 import de.uni_mannheim.informatik.dws.winter.utils.ProgressReporter;
 import de.uni_mannheim.informatik.dws.winter.utils.query.Q;
 import de.uni_mannheim.informatik.dws.winter.webtables.Table;
@@ -46,10 +47,10 @@ import de.uni_mannheim.informatik.dws.winter.webtables.writers.JsonTableWriter;
 public class WebTables {
 
     // data that will be matched: records and schema
-	private FusibleDataSet<MatchableTableRow, MatchableTableColumn> records = new FusibleHashedDataSet<>();
-	private HashedDataSet<MatchableTableColumn, MatchableTableColumn> schema = new HashedDataSet<>();
-	private HashedDataSet<MatchableTableDeterminant, MatchableTableColumn> candidateKeys = new HashedDataSet<>();
-	private HashedDataSet<MatchableTable, MatchableTableColumn> tableRecords = new HashedDataSet<>();
+	private FusibleDataSet<MatchableTableRow, MatchableTableColumn> records = new FusibleParallelHashedDataSet<>();
+	private DataSet<MatchableTableColumn, MatchableTableColumn> schema = new ParallelHashedDataSet<>();
+	private DataSet<MatchableTableDeterminant, MatchableTableColumn> candidateKeys = new ParallelHashedDataSet<>();
+	private DataSet<MatchableTable, MatchableTableColumn> tableRecords = new ParallelHashedDataSet<>();
 	
 	// matched web tables and their key columns
 	private HashMap<Integer, MatchableTableColumn> keys = new HashMap<>();
@@ -349,14 +350,14 @@ public class WebTables {
 		return records;
 	}
 
-	public HashedDataSet<MatchableTableColumn, MatchableTableColumn> getSchema() {
+	public DataSet<MatchableTableColumn, MatchableTableColumn> getSchema() {
 		return schema;
 	}
 
 	/**
 	 * @return the candidateKeys
 	 */
-	public HashedDataSet<MatchableTableDeterminant, MatchableTableColumn> getCandidateKeys() {
+	public DataSet<MatchableTableDeterminant, MatchableTableColumn> getCandidateKeys() {
 		return candidateKeys;
 	}
 	
@@ -367,7 +368,7 @@ public class WebTables {
 	/**
 	 * @return the tableRecords
 	 */
-	public HashedDataSet<MatchableTable, MatchableTableColumn> getTableRecords() {
+	public DataSet<MatchableTable, MatchableTableColumn> getTableRecords() {
 		return tableRecords;
 	}
 	
