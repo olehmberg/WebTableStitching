@@ -79,7 +79,7 @@ public class CreateStitchedUnionTables extends Executable {
 	
 	public void run() throws Exception {
 		System.err.println("Loading Web Tables");
-		WebTables web = WebTables.loadWebTables(new File(webLocation), true, false, false, serialise);
+		WebTables web = WebTables.loadWebTables(new File(webLocation), true, true, false, serialise);
 		web.removeHorizontallyStackedTables();
 		
 		System.err.println("Matching Union Tables");
