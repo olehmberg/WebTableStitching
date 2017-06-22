@@ -310,6 +310,7 @@ public class TableReconstructor {
 				// add provenance
 				TableRow originalRow = web.get(row.getTableId()).get(row.getRowNumber());
 				newRow.addProvenanceForRow(originalRow);
+				newRow.getProvenance().add(row.getIdentifier());
 			}
 			
 			t.addRow(newRow);
