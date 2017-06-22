@@ -156,24 +156,28 @@ public class UnionTables {
 				
 				if(union!=null) {
 				
-					// add provenance information to the columns
-					for(TableColumn c : union.getColumns()) {
-						int extraColumns = contextAttributes.size();
-						
-						if(!SpecialColumns.isSpecialColumn(c) && !ContextColumns.isContextColumn(c)) {
-							TableColumn c2 = t.getSchema().get(c.getColumnIndex() - extraColumns);
-							c.addProvenanceForColumn(c2);
+					synchronized (union) {
+					
+						// add provenance information to the columns
+						for(TableColumn c : union.getColumns()) {
+							int extraColumns = contextAttributes.size();
+							
+							if(!SpecialColumns.isSpecialColumn(c) && !ContextColumns.isContextColumn(c)) {
+								TableColumn c2 = t.getSchema().get(c.getColumnIndex() - extraColumns);
+								c.addProvenanceForColumn(c2);
+							}
 						}
+						
+						try {
+							context.addUnionColumns(t, true, contextAttributes);
+							
+							union.append(t);
+						} catch (URISyntaxException e) {
+							e.printStackTrace();
+						}
+				
 					}
 					
-					try {
-						context.addUnionColumns(t, true, contextAttributes);
-						
-						union.append(t);
-					} catch (URISyntaxException e) {
-						e.printStackTrace();
-					}
-				
 				}
 			}
 			
