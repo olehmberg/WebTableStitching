@@ -1,0 +1,9 @@
+#!/bin/bash
+
+JAR="../target/webtablestitching-1.0-jar-with-dependencies.jar"
+CLS="de.uni_mannheim.informatik.dws.tnt.match.cli.CreateStitchedUnionTables"
+
+TABLES="../examples/union_dep/"
+RESULTS="../examples/stitched_union/"
+
+java -cp $JAR $CLS -web $TABLES -results $RESULTS -matcher Label

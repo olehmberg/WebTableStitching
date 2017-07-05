@@ -1,0 +1,10 @@
+#!/bin/bash
+
+JAR="../target/webtablestitching-1.0-jar-with-dependencies.jar"
+CLS="de.uni_mannheim.informatik.dws.tnt.match.cli.DiscoverFunctionalDependencies"
+
+TABLES="../examples/union/"
+CSV="../examples/union_csv/"
+RESULTS="../examples/union_dep/"
+
+java -cp $JAR $CLS -web $TABLES -csv $CSV -json $RESULTS
