@@ -55,6 +55,10 @@
 			<url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/thirdparty/</url>
 		</repository>
 		<repository>
+			<id>releases</id>
+			<url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/releases/</url>
+		</repository>
+		<repository>
 			<id>snapshots-repo</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
@@ -70,7 +74,7 @@
 		<dependency>
 			<groupId>de.uni_mannheim.informatik.dws</groupId>
 			<artifactId>winter</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
@@ -88,7 +92,7 @@
 			<version>1.1</version>
 		</dependency>
 		<dependency>
-			<!-- 	use this option when building:	-Xss10M -->
+			<!-- use this option when building: -Xss10M -->
 			<groupId>de.metanome</groupId>
 			<artifactId>backend</artifactId>
 			<version>1.1-SNAPSHOT</version>
