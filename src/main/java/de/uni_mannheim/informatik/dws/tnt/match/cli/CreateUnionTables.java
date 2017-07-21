@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.beust.jcommander.Parameter;
@@ -47,6 +48,9 @@ public class CreateUnionTables extends Executable {
 	@Parameter(names = "-serialise")
 	private boolean serialise;
 	
+	@Parameter(names = "-noContextColumns")
+	private boolean noContextColumns = false;
+	
 	public static void main(String[] args) throws URISyntaxException, IOException {
 		CreateUnionTables app = new CreateUnionTables();
 		
@@ -63,8 +67,14 @@ public class CreateUnionTables extends Executable {
 		
 		UnionTables union = new UnionTables();
 		
-		System.err.println("Creating Context Attributes");
-		Map<String, Integer> contextAttributes = union.generateContextAttributes(web.getTables().values(), true, false);
+		Map<String, Integer> contextAttributes = null;
+		
+		if(!noContextColumns) {
+			System.err.println("Creating Context Attributes");
+			contextAttributes = union.generateContextAttributes(web.getTables().values(), true, false);
+		} else {
+			contextAttributes = new HashMap<>();
+		}
 		
 		System.err.println("Creating Union Tables");
 		Collection<Table> unionTables = union.create(new ArrayList<>(web.getTables().values()), contextAttributes);

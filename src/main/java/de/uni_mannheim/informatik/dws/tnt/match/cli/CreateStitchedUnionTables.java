@@ -27,6 +27,7 @@ import com.beust.jcommander.Parameter;
 import de.uni_mannheim.informatik.dws.tnt.match.DisjointHeaders;
 import de.uni_mannheim.informatik.dws.tnt.match.data.MatchableTableColumn;
 import de.uni_mannheim.informatik.dws.tnt.match.data.WebTables;
+import de.uni_mannheim.informatik.dws.tnt.match.evaluation.N2NGoldStandardCreator;
 import de.uni_mannheim.informatik.dws.tnt.match.matchers.CandidateKeyBasedMatcher;
 import de.uni_mannheim.informatik.dws.tnt.match.matchers.DeterminantBasedMatcher;
 import de.uni_mannheim.informatik.dws.tnt.match.matchers.EntityLabelBasedMatcher;
@@ -68,6 +69,12 @@ public class CreateStitchedUnionTables extends Executable {
 	
 	@Parameter(names = "-serialise")
 	private boolean serialise;
+	
+	@Parameter(names = "-prepareGS")
+	private boolean prepareGoldStandard = false;
+	
+	@Parameter(names = "-eval")
+	private String evaluationLocation;
 	
 	public static void main(String[] args) throws Exception {
 		CreateStitchedUnionTables app = new CreateStitchedUnionTables();
@@ -135,6 +142,14 @@ public class CreateStitchedUnionTables extends Executable {
     	matcher.match();
     	
     	Processable<Correspondence<MatchableTableColumn, Matchable>> schemaCorrespondences = matcher.getSchemaCorrespondences();
+    	
+    	if(prepareGoldStandard) {
+    		N2NGoldStandardCreator gsc = new N2NGoldStandardCreator();
+    		File evalFile = new File(evaluationLocation);
+    		evalFile.mkdirs();
+        	gsc.writeInterUnionMapping(new File(evalFile, "inter_union_mapping_generated.tsv"), schemaCorrespondences, web);
+        	gsc.writeUnionTablesSchema(new File(evalFile, "union_tables_mapping_generated.tsv"), web.getTables().values());
+    	}
     	
     	return schemaCorrespondences;
 	}

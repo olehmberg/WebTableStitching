@@ -47,78 +47,96 @@ public class ContextAttributeExtractor {
 
 
 	public List<String> getUriFragmentParts(Table t) throws URISyntaxException {
-		URI u = new URI(t.getContext().getUrl());
 		
-		List<String> parts = Q.toList(u.getPath().split("/"));
+		List<String> parts = null;
 		
-		if(parts!=null && parts.size()>0) {
-			parts.remove(0); // the path starts with /, so the first element is empty
+		if(t.getContext()!=null) {
+			URI u = new URI(t.getContext().getUrl());
 			
-			for(int i = 0; i < parts.size(); i++) {
-				parts.set(i, ContextColumns.createUriPartHeader(i));
+			parts = Q.toList(u.getPath().split("/"));
+			
+			if(parts!=null && parts.size()>0) {
+				parts.remove(0); // the path starts with /, so the first element is empty
+				
+				for(int i = 0; i < parts.size(); i++) {
+					parts.set(i, ContextColumns.createUriPartHeader(i));
+				}
 			}
+		} else {
+			parts = new ArrayList<>(0);
 		}
 		
 		return parts;
 	}
 
 	public List<String> getUriFragmentValues(Table t) throws URISyntaxException {
-		URI u = new URI(t.getContext().getUrl());
+		List<String> parts = null;
 		
-		List<String> parts = Q.toList(u.getPath().split("/"));
-		if(parts!=null && parts.size()>0) {
-			parts.remove(0); // the path starts with /, so the first element is empty
+		if(t.getContext()!=null) {
+			URI u = new URI(t.getContext().getUrl());
 			
-			for(int i = 0; i < parts.size(); i++) {
-				parts.set(i, parts.get(i));
+			parts = Q.toList(u.getPath().split("/"));
+			if(parts!=null && parts.size()>0) {
+				parts.remove(0); // the path starts with /, so the first element is empty
+				
+				for(int i = 0; i < parts.size(); i++) {
+					parts.set(i, parts.get(i));
+				}
 			}
+		} else {
+			parts = new ArrayList<>(0);
 		}
 		
 		return parts;
 	}
 	
 	public List<String> getUriQueryParts(Table t) throws URISyntaxException {
-		URI u = new URI(t.getContext().getUrl());
-		
 		List<String> parts = new ArrayList<>();
 		
-		if(u.getQuery()!=null) {
+		if(t.getContext()!=null) {
+		
+			URI u = new URI(t.getContext().getUrl());
 			
-			List<NameValuePair> params = URLEncodedUtils.parse(u, "UTF-8");
-			
-			Map<String, Integer> paramCounts = new HashMap<>();
-			
-			for(NameValuePair param : params) {
+			if(u.getQuery()!=null) {
 				
-				int idx = MapUtils.increment(paramCounts, param.getName());
+				List<NameValuePair> params = URLEncodedUtils.parse(u, "UTF-8");
 				
-				if(idx>1) {
-					parts.add(String.format("%s[%d]", param.getName(), idx));
-				} else {
-					parts.add(param.getName());
+				Map<String, Integer> paramCounts = new HashMap<>();
+				
+				for(NameValuePair param : params) {
+					
+					int idx = MapUtils.increment(paramCounts, param.getName());
+					
+					if(idx>1) {
+						parts.add(String.format("%s[%d]", param.getName(), idx));
+					} else {
+						parts.add(param.getName());
+					}
+					
 				}
-				
+			}
+			
+			for(int i = 0; i < parts.size(); i++) {
+				parts.set(i, ContextColumns.createUriQueryPartHeader(parts.get(i)));
 			}
 		}
-		
-		for(int i = 0; i < parts.size(); i++) {
-			parts.set(i, ContextColumns.createUriQueryPartHeader(parts.get(i)));
-		}
-		
+			
 		return parts;
 	}
 	
 	public List<String> getUriQueryValues(Table t) throws URISyntaxException {
-		URI u = new URI(t.getContext().getUrl());
-		
 		List<String> parts = new ArrayList<>(); 
 		
-		if(u.getQuery()!=null) {
-			
-			List<NameValuePair> params = URLEncodedUtils.parse(u, "UTF-8");
-			
-			for(NameValuePair param : params) {
-				parts.add(param.getValue());
+		if(t.getContext()!=null) {
+			URI u = new URI(t.getContext().getUrl());
+		
+			if(u.getQuery()!=null) {
+				
+				List<NameValuePair> params = URLEncodedUtils.parse(u, "UTF-8");
+				
+				for(NameValuePair param : params) {
+					parts.add(param.getValue());
+				}
 			}
 		}
 		
@@ -150,8 +168,8 @@ public class ContextAttributeExtractor {
 			extraColumns++;
 		}
 		
-		if(addData) {
-			TableContext ctx = t.getContext();
+		TableContext ctx = t.getContext();
+		if(addData && ctx!=null) {
 		
 			List<String> uriParts = getUriFragmentParts(t);
 			List<String> queryParts = getUriQueryParts(t);

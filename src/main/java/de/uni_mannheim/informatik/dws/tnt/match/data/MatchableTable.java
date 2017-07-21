@@ -33,7 +33,9 @@ public class MatchableTable implements Matchable {
 	
 	public MatchableTable(Table t, MatchableTableColumn[] schema) {
 		this.tableId = t.getTableId();
-		this.tableIndex = t.getContext().getTableNum();
+		if(t.getContext()!=null) {
+			this.tableIndex = t.getContext().getTableNum();
+		}
 		this.schema = schema;
 	}
 	

@@ -38,10 +38,10 @@ import de.uni_mannheim.informatik.dws.tnt.match.ContextColumns;
 import de.uni_mannheim.informatik.dws.tnt.match.SpecialColumns;
 import de.uni_mannheim.informatik.dws.tnt.match.TableSchemaStatistics;
 import de.uni_mannheim.informatik.dws.tnt.match.data.MatchableTableColumn;
-import de.uni_mannheim.informatik.dws.tnt.match.data.MatchableTableRow;
 import de.uni_mannheim.informatik.dws.tnt.match.data.WebTables;
 import de.uni_mannheim.informatik.dws.winter.clustering.ConnectedComponentClusterer;
 import de.uni_mannheim.informatik.dws.winter.model.Correspondence;
+import de.uni_mannheim.informatik.dws.winter.model.Matchable;
 import de.uni_mannheim.informatik.dws.winter.model.Triple;
 import de.uni_mannheim.informatik.dws.winter.processing.Processable;
 import de.uni_mannheim.informatik.dws.winter.utils.Distribution;
@@ -76,17 +76,26 @@ public class N2NGoldStandardCreator {
 			
 			BufferedReader r = new BufferedReader(new FileReader(union_tables_mapping));
 			String line = null;
-			while((line=r.readLine())!=null) {
-				String[] content = line.split("\\#");
-				String[] values = content[0].trim().split(",");
-				combinableTables.add(new HashSet<>(Arrays.asList(values)));
-				
-				Map<Integer, Set<String>> columnMapping = new HashMap<>();
-				for(String table : values) {
-					provenanceMapping.put(table, columnMapping);
+			int lineNo = 1;
+			try {
+				while((line=r.readLine())!=null) {
+					String[] content = line.split("\\#");
+					String[] values = content[0].trim().split(",");
+					combinableTables.add(new HashSet<>(Arrays.asList(values)));
+					
+					Map<Integer, Set<String>> columnMapping = new HashMap<>();
+					for(String table : values) {
+						provenanceMapping.put(table, columnMapping);
+					}
+					
+					lineNo++;
 				}
+			} catch(Exception e) {
+				System.err.println(String.format("Error in file %s line %d: %s", union_tables_mapping.getAbsolutePath(), lineNo, e.getMessage()));
+				throw e;
+			} finally {
+				r.close();
 			}
-			r.close();
 			
 			// index tables by name
 			HashMap<String, Table> tablesByName = new HashMap<>();
@@ -101,6 +110,7 @@ public class N2NGoldStandardCreator {
 			
 			r = new BufferedReader(new FileReader(inter_union_mapping));
 	
+			lineNo = 1;
 			try {
 				while((line = r.readLine())!=null) {
 					String[] content = line.split("\\#");
@@ -156,7 +166,11 @@ public class N2NGoldStandardCreator {
 					}
 	
 					unionGold.getCorrespondenceClusters().put(unionTables, content[1]);
+					lineNo++;
 				}
+			}
+			catch(Exception e) {
+				System.err.println(String.format("Error in file %s line %d: %s", inter_union_mapping.getAbsolutePath(), lineNo, e.getMessage()));
 			}
 			finally {
 				r.close();
@@ -266,15 +280,27 @@ public class N2NGoldStandardCreator {
     	}
     	gold.writeToTSV(new File(evaluationLocation, "union_tables_mapping_goldstandard.tsv"));
 	}
+	
+	public void writeUnionTablesSchema(File f, Collection<Table> unionTables) throws IOException {
+		
+		BufferedWriter w = new BufferedWriter(new FileWriter(f));
+		
+		for(Table union : unionTables) {
+			w.write(String.format("%s\n", getTableId(union)));
+		}
+		
+		w.close();
+		
+	}
 
-	public void writeInterUnionMapping(File f, Processable<Correspondence<MatchableTableColumn, MatchableTableRow>> correspondences, final WebTables web) throws IOException {
+	public void writeInterUnionMapping(File f, Processable<Correspondence<MatchableTableColumn, Matchable>> correspondences, final WebTables web) throws IOException {
 		ConnectedComponentClusterer<MatchableTableColumn> clusterer = new ConnectedComponentClusterer<>();
 		
 		for(MatchableTableColumn c : web.getSchema().get()) {
 			clusterer.addEdge(new Triple<MatchableTableColumn, MatchableTableColumn, Double>(c, c, 1.0));
 		}
 		
-		for(Correspondence<MatchableTableColumn, MatchableTableRow> cor : correspondences.get()) {
+		for(Correspondence<MatchableTableColumn, Matchable> cor : correspondences.get()) {
 			clusterer.addEdge(new Triple<MatchableTableColumn, MatchableTableColumn, Double>(cor.getFirstRecord(), cor.getSecondRecord(), cor.getSimilarityScore()));
 		}
 		

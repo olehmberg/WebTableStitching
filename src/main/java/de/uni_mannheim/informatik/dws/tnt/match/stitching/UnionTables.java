@@ -207,9 +207,11 @@ public class UnionTables {
 		
 		// add context information
 		TableContext ctx = new TableContext();
-		ctx.setTableNum(t.getContext().getTableNum());
-		URL url = new URL(t.getContext().getUrl());
-		ctx.setUrl(String.format("%s://%s", url.getProtocol(), url.getHost()));
+		if(t.getContext()!=null) {
+			ctx.setTableNum(t.getContext().getTableNum());
+			URL url = new URL(t.getContext().getUrl());
+			ctx.setUrl(String.format("%s://%s", url.getProtocol(), url.getHost()));
+		}
 		union.setContext(ctx);
 		
 		// remove all rows from the union table

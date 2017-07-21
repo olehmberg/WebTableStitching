@@ -208,6 +208,9 @@ public class WebTables {
 			    	
 			    	// create the matchable table record
 			    	MatchableTable mt = new MatchableTable(web, Q.toArrayFromCollection(schemaColumns, MatchableTableColumn.class));
+			    	if(web.getContext()==null) {
+			    		web.setTableId(tblIdx);
+			    	}
 			    	tableRecords.add(mt);
 					
 		    		// list records
